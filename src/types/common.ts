@@ -3,14 +3,14 @@ export type AppInternalState = {
     selectedWells: string[]
     productionData: ProductionData[]
     completionData: CompletionData[]
-    aggregatedWellData: IGeneric[]
+    aggregatedWellData: IData[]
     filter: string | undefined
 }
 
 export type AppCtx = AppInternalState & {
     setFilter: (word: string) => void
-    getFilteredWells: () => void 
-    editWellName: (wellApi: string, newName: string) => void
+    getFilteredWells: () => IData[] 
+    editWellName: (wellApi: string, newName: string | undefined) => void
 }
 
 export interface IGeneric {
@@ -66,4 +66,5 @@ export interface IData extends ProductionData {
     maxBHP: number 
     long: number
     lat:number
+    Date: string
 }

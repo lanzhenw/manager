@@ -5,7 +5,7 @@ import styled from "styled-components"
 
 import Page from "../components/Page"
 import TitleBar from "../components/TitleBar"
-import WellControl from "../components/WellControl"
+import WellControl from "../components/controls/WellControl"
 import { AppProvider } from "../context/AppContext"
 
 

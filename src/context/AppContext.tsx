@@ -36,7 +36,7 @@ export const AppProvider = ({children}: TachAppProviderProps) => {
                 return {...d, ...completionInfo, Date}
             } else {
                 console.error("cannot find well" + d.wellAPI + "in the completion file")
-                return {...d, Date}
+                return {...d, Date, wellName: '', Type: '', X: 0, Y: 0, TD: "", isHorizontal: 0, reservoir: '', faultBlock: '', compartment: '', maxBHP:0, long: 0, lat: 0}
             }
         }) 
         setState(s => ({...s, aggregatedWellData: data}))
@@ -66,18 +66,20 @@ export const AppProvider = ({children}: TachAppProviderProps) => {
 
     const getFilteredWells = () => {
         if (state.filter && state.filter !== "") {
-            state.aggregatedWellData.filter(x => x.wellName.toLowerCase().includes(state.filter?.toLowerCase()))
+            return state.aggregatedWellData.filter(x => x.wellName.toLowerCase().includes(state.filter!.toLowerCase()))
         } else return state.aggregatedWellData
     }
 
-    const editWellName = (wellApi: string, newName: string) => {
-        const newData = [...state.aggregatedWellData].map(x => {
-            if (x.wellAPI === wellApi) {
-                x.wellName = newName
-                return x
-            } else return x
-        })
-        setState(s => ({...s, aggregatedWellData: newData}))
+    const editWellName = (wellApi: string, newName: string | undefined) => {
+        if (newName) {
+            const newData = [...state.aggregatedWellData].map(x => {
+                if (x.wellAPI === wellApi) {
+                    x.wellName = newName
+                    return x
+                } else return x
+            })
+            setState(s => ({...s, aggregatedWellData: newData}))
+        }
     }
 
     return (

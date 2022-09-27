@@ -1,5 +1,7 @@
 import styled from "styled-components"
 import {ReactNode} from "react"
+import { TabStrip, TabStripSelectEventArguments, TabStripTab } from "@progress/kendo-react-layout"
+import { useLocation, useNavigate } from "react-router-dom"
 
 type Props = {
     children: ReactNode
@@ -7,13 +9,14 @@ type Props = {
 
 const Root = styled.div`
     height: 100%;
-    width: 70%;
-    border: 2px solid green;
+    width: calc(100% - 350px);
 `
-
-
 const Page = ({children}: Props) => {
-    return <Root>{children}</Root>
+    return (
+        <Root>
+             {children}
+        </Root>
+    ) 
 }
 
 export default Page
