@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@blueprintjs/core": "^4.10.2",
     "@progress/kendo-data-query": "^1.6.0",
     "@progress/kendo-drawing": "^1.17.1",
     "@progress/kendo-licensing": "^1.2.2",
@@ -52,6 +53,7 @@
     "@types/react-dom": "^18.0.6",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.26",
+    "mapbox-gl": "^2.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-map-gl": "^7.0.19",

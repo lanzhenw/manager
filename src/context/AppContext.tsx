@@ -8,8 +8,8 @@ type TachAppProviderProps = {
     children: ReactNode
 }
 
-const COMPLETIONFILEURL = './data/completions.csv'
-const PRODUCTIONFILEURL = './data/production.csv'
+const COMPLETIONFILEURL = '/data/completions.csv'
+const PRODUCTIONFILEURL = '/data/production.csv'
 
 export const AppContext = createContext<AppCtx | null>(null)
 
@@ -36,7 +36,7 @@ export const AppProvider = ({children}: TachAppProviderProps) => {
                 return {...d, ...completionInfo, Date}
             } else {
                 console.error("cannot find well" + d.wellAPI + "in the completion file")
-                return {...d, Date, wellName: '', Type: '', X: 0, Y: 0, TD: "", isHorizontal: 0, reservoir: '', faultBlock: '', compartment: '', maxBHP:0, long: 0, lat: 0}
+                return {...d, Date, wellName: '', Type: '', X: '0', Y: '0', TD: "", isHorizontal: '0', reservoir: '', faultBlock: '', compartment: '', maxBHP:'0', long: '0', lat: '0'}
             }
         }) 
         setState(s => ({...s, aggregatedWellData: data}))
@@ -65,10 +65,14 @@ export const AppProvider = ({children}: TachAppProviderProps) => {
     }
 
     const getFilteredWells = () => {
-        if (state.filter && state.filter !== "") {
-            return state.aggregatedWellData.filter(x => x.wellName.toLowerCase().includes(state.filter!.toLowerCase()))
-        } else return state.aggregatedWellData
+        // if (state.filter && state.filter !== "") {
+        //     return state.aggregatedWellData.filter(x => x.wellName.toLowerCase().includes(state.filter!.toLowerCase()))
+        // } else return state.aggregatedWellData
+        // console.info("state", state)
+        return state.aggregatedWellData
     }
+
+    const getCompletionData = () => state.completionData
 
     const editWellName = (wellApi: string, newName: string | undefined) => {
         if (newName) {
@@ -91,6 +95,7 @@ export const AppProvider = ({children}: TachAppProviderProps) => {
            filter: undefined,
            setFilter: setFilter, 
            getFilteredWells: getFilteredWells,
+           getCompletionData: getCompletionData,
            editWellName: editWellName
         }}>
             {children}

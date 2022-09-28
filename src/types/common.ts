@@ -10,6 +10,7 @@ export type AppInternalState = {
 export type AppCtx = AppInternalState & {
     setFilter: (word: string) => void
     getFilteredWells: () => IData[] 
+    getCompletionData: () => CompletionData[]
     editWellName: (wellApi: string, newName: string | undefined) => void
 }
 
@@ -41,30 +42,30 @@ export type CompletionData = {
     boreID: string
     compSubId: string
     Type: string 
-    X: number // bottom hole pressure
-    Y: number // oil quantity
+    X: string // bottom hole pressure
+    Y: string // oil quantity
     TD: string // water quantity
-    isHorizontal: number // 0 for horizontal
+    isHorizontal: string // 0 for horizontal
     reservoir: string
     faultBlock: string | null
     compartment: string | null
-    maxBHP: number 
-    long: number
-    lat:number
+    maxBHP: string 
+    long: string
+    lat:string
 }
 
 export interface IData extends ProductionData {
     wellName: string
     Type: string 
-    X: number // bottom hole pressure
-    Y: number // oil quantity
+    X: string // bottom hole pressure
+    Y: string // oil quantity
     TD: string // water quantity
-    isHorizontal: number // 0 for horizontal
+    isHorizontal: string // 0 for horizontal
     reservoir: string
     faultBlock: string | null
     compartment: string | null
-    maxBHP: number 
-    long: number
-    lat:number
+    maxBHP: string 
+    long: string
+    lat: string
     Date: string
 }

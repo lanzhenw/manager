@@ -17,6 +17,7 @@ const Container = styled.div`
     width: 100%;
 `
 const EDIT_FIELD = 'inEdit'
+
 const FilterBar:React.FunctionComponent = () => {
     const appCtx = useApp()
     const wellData =  appCtx.getFilteredWells()
