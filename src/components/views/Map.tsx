@@ -24,12 +24,24 @@ const MapGL = () => {
     const [showPopup, setShowPopup] = React.useState(true)
     const [selectedWell, setSelectedWell] = useState<CompletionData|undefined>(undefined)
 
-    // const onClose = (ev:PopupEvent) => {
-    //     setSelectedWell(undefined)
-    // }
-    const getColor = (wellType: string) => wellType === "Producer" ? "#90A959" : "#FA89B5"
+
+    const getColor = (reservior: string) => {
+        switch (reservior.toLowerCase()) {
+            case "red":
+                return "rgba(99, 105, 227, 0.5)" // purple
+            case "bisque":
+                return "rgba(239, 67, 107, 0.7)" // pink
+            case "rock":
+                return "rgba(252, 255, 51, 0.9)" // yellow
+            case "maine":
+                return "rgba(4, 163, 149, 0.7)" // green
+            default:  
+                return "orange"
+        }
+    }
+    
     const markers = useMemo(() => {
-       
+    
         return wellData.map((well) => (
             <Marker
                 key={well.wellName}
@@ -43,12 +55,14 @@ const MapGL = () => {
                         setSelectedWell(well)
                         setShowPopup(true)
                     }}
-                    style={{backgroundColor: getColor(well.Type), color: "pink", borderWidth: '0px', padding: "3px 6px"}}
+                    style={{backgroundColor: getColor(well.reservoir), borderWidth: '0px', padding: "3px 6px"}}
                     outlined={false}
                 />
             </Marker>
         ))
     }, [wellData])
+
+    console.info(selectedWell)
 
     return (
         <ViewTabStrip tab={0}>

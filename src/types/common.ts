@@ -24,15 +24,15 @@ export type ProductionData = {
     wellAPI: string
     boreID: string
     compSubId: string
-    BHP: number // bottom hole pressure
-    Qo: number // oil quantity
-    Qw: number // water quantity
-    Qg: number // gas quantity
-    Qs: number
-    CompL: number
-    FlowDays: number 
-    Pressure: number
-    Status: number// 1 for completed
+    BHP: string // bottom hole pressure
+    Qo: string // oil quantity
+    Qw: string // water quantity
+    Qg: string // gas quantity
+    Qs: string
+    CompL: string
+    FlowDays: string 
+    Pressure: string
+    Status: string// 1 for completed
 }
 
 
@@ -42,9 +42,9 @@ export type CompletionData = {
     boreID: string
     compSubId: string
     Type: string 
-    X: string // bottom hole pressure
-    Y: string // oil quantity
-    TD: string // water quantity
+    X: string 
+    Y: string 
+    TD: string 
     isHorizontal: string // 0 for horizontal
     reservoir: string
     faultBlock: string | null
@@ -57,10 +57,10 @@ export type CompletionData = {
 export interface IData extends ProductionData {
     wellName: string
     Type: string 
-    X: string // bottom hole pressure
-    Y: string // oil quantity
-    TD: string // water quantity
-    isHorizontal: string // 0 for horizontal
+    X: string 
+    Y: string 
+    TD: string
+    isHorizontal: string 
     reservoir: string
     faultBlock: string | null
     compartment: string | null

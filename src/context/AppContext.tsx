@@ -36,7 +36,7 @@ export const AppProvider = ({children}: TachAppProviderProps) => {
                 return {...d, ...completionInfo, Date}
             } else {
                 console.error("cannot find well" + d.wellAPI + "in the completion file")
-                return {...d, Date, wellName: '', Type: '', X: '0', Y: '0', TD: "", isHorizontal: '0', reservoir: '', faultBlock: '', compartment: '', maxBHP:'0', long: '0', lat: '0'}
+                return {...d, Date, wellName: '', Type: '', X: '0', Y: '0', TD: "", isHorizontal: '0', reservoir: 'missing', faultBlock: '', compartment: '', maxBHP:'0', long: '0', lat: '0'}
             }
         }) 
         setState(s => ({...s, aggregatedWellData: data}))

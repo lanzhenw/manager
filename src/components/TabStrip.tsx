@@ -40,7 +40,7 @@ const ViewTabStrip = ({tab, children}: Props) => {
                 <TabStripTab title="Table" contentClassName="Panel-body">
                     {children}
                 </TabStripTab>
-                <TabStripTab title="Production" contentClassName="Panel-body">
+                <TabStripTab title="Reservior" contentClassName="Panel-body">
                     {children}
                 </TabStripTab>
                 <TabStripTab title="Gross" contentClassName="Panel-body">

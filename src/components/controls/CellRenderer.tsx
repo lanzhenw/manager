@@ -40,6 +40,7 @@ const CellRender = (props: CellRenderProps) => {
           }
         : {
             onClick: () => {
+                console.info( cellField, "cellfield")
               props.enterEdit(dataItem, cellField);
             },
           };
