@@ -2,76 +2,87 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components"
 import {
     Grid,
-    GridCellProps,
     GridColumn as Column,
     GridPageChangeEvent,
+    GridSortChangeEvent
   } from "@progress/kendo-react-grid";
+import { orderBy, SortDescriptor } from "@progress/kendo-data-query"
 import ViewTabStrip from '../TabStrip';
 import useApp from '../../hooks/useApp';
-
-import { IData, IGeneric } from "../../types/common";
-import CellRender from "../controls/CellRenderer";
+import { IData } from "../../types/common";
 
 const Container = styled.div`
     height: 100%;
     margin: 0 auto;
     width: 100%;
 `
-const EDIT_FIELD = 'inEdit'
+const initialDataState: PageState = { skip: 0, take: 25 }
+
+interface PageState {
+    skip: number,
+    take: number
+}
+
 const Table = () => {
     const appCtx = useApp()
     const wellData =  appCtx.getFilteredWells()
+
+    const [page, setPage] = React.useState<PageState>(initialDataState)
+    const [data, setData] = useState<IData[]>(wellData)
+    const [sort, setSort] = React.useState<Array<SortDescriptor>>([
+        { field: "wellName", dir: "desc" },
+      ])
     
-    const [skip, setSkip] = React.useState<number>(0);
-    const [displayData, setDisplayData] = useState<IGeneric[]>([])
-
-    useEffect(() => {
-        const d = wellData.slice(0, 800)
-        setDisplayData(d.slice(skip, skip + 30))
-    },[skip, wellData])
-
-    const pageChange = (event: GridPageChangeEvent) => {
-        console.info(event.page.skip)
-        setSkip(event.page.skip);
+      const pageChange = (event: GridPageChangeEvent) => {
+        setPage(event.page);
     }
 
-    const customCellRender: any = (
-        td: React.ReactElement<HTMLTableCellElement>,
-        props: GridCellProps
-      ) => (
-        <CellRender
-          originalProps={props}
-          td={td}
-          enterEdit={enterEdit}
-          editField={EDIT_FIELD}
-        />
-    )
 
-    const enterEdit = (dataItem: IData, field: string | undefined) => appCtx.editWellName(dataItem.wellAPI, field)
-    
+    const sortChange = (event: GridSortChangeEvent) => {
+    //   setData(getData(event.sort));
+      setSort(event.sort);
+    };
+
+    const getData = (data: IData[], sort: SortDescriptor[]): IData[] => {
+      return orderBy(data, sort);
+    }
+
+    useEffect(() => {
+        const d = getData(wellData, sort)
+        setData(d)
+    }, [ sort, wellData])
+
+    console.info('data', data, wellData)
+   
     return (
         <ViewTabStrip tab={1}>
             <Container>
                 <Grid
                     style={{ height: "100%" }}
                     rowHeight={30}
-                    data={wellData}
-                    pageSize={30}
-                    total={displayData.length}
-                    skip={skip}
-                    scrollable={"virtual"}
+                    pageable
+                    data={data.slice(page.skip, page.take + page.skip)}
+                    skip={page.skip}
+                    take={page.take}
+                    pageSize={100}
+                    total={data.length}
                     onPageChange={pageChange}
-                    // onItemChange={itemChange}
-                    // cellRender={customCellRender}
-                    // editField={EDIT_FIELD}
+                    sort={sort}
+                    sortable={{
+                        allowUnsort: true,
+                        mode: "multiple",
+                    }}
+                    onSortChange={sortChange}
                 >
-                    <Column field="wellName" title="Well Name" width="100px" />
-                    <Column field="boreID" title="Bore" width="50px" />
-                    <Column field="reservoir" title="Reservoir" width="70px" />
-                    <Column field="Date" title="Date" width="70px" />
-                    <Column field="Qo" title="Oil" width="100px" />
-                    <Column field="Qw" title="Water" width="100px" />
-                    <Column field="Qg" title="Gas" width="100px" /> 
+                    <Column field="Date" title="Date" width="120px" filterable={false}/>
+                    <Column field="wellName" title="Well Name" width="150px" />
+                    <Column field="reservoir" title="Reservoir" width="150px" />
+                    <Column field="Type" title="Type" width="120px" filterable={false}/> 
+                    <Column field="Qo" title="Oil Prod" width="120px" filterable={false}/>
+                    <Column field="Qw" title="Water Prod" width="120px" filterable={false} />
+                    <Column field="Qg" title="Gas Prod" width="120px" filterable={false}/> 
+                    <Column field="Qs" title="Solid Prod" width="120px" filterable={false}/> 
+                    <Column field="BHP" title="Bottom Hole Pressure" width="100px" filterable={false}/> 
                 </Grid>
             </Container>
         </ViewTabStrip>

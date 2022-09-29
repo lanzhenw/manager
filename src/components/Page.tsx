@@ -9,7 +9,7 @@ type Props = {
 
 const Root = styled.div`
     height: 100%;
-    width: calc(100% - 350px);
+    width: calc(100% - 200px);
 `
 const Page = ({children}: Props) => {
     return (
