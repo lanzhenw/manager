@@ -25,7 +25,7 @@ interface PageState {
 
 const Table = () => {
     const appCtx = useApp()
-    const wellData =  appCtx.getFilteredWells()
+    const wellData =  appCtx.aggregatedWellData
 
     const [page, setPage] = React.useState<PageState>(initialDataState)
     const [data, setData] = useState<IData[]>(wellData)
@@ -39,7 +39,6 @@ const Table = () => {
 
 
     const sortChange = (event: GridSortChangeEvent) => {
-    //   setData(getData(event.sort));
       setSort(event.sort);
     };
 

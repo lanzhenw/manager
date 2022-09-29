@@ -1,8 +1,9 @@
 import {createContext, ReactNode, useEffect, useState} from "react";
 import { readRemoteFile } from 'react-papaparse';
 import { ParseResult } from "papaparse";
-import { AppCtx, AppInternalState, CompletionData, IGeneric, ProductionData } from "../types/common";
-import { groupByKey, useDynamicCallback } from "../components/utils";
+import { AppCtx, AppInternalState, CompletionData, Filter, ProductionData } from "../types/common";
+import { useDynamicCallback } from "../components/utils";
+
 
 type TachAppProviderProps = {
     children: ReactNode
@@ -12,7 +13,6 @@ const COMPLETIONFILEURL = '/data/completions.csv'
 const PRODUCTIONFILEURL = '/data/production.csv'
 
 export const AppContext = createContext<AppCtx | null>(null)
-
 export const AppProvider = ({children}: TachAppProviderProps) => {
 
     const [state, setState] = useState<AppInternalState>({
@@ -20,7 +20,9 @@ export const AppProvider = ({children}: TachAppProviderProps) => {
         productionData: [],
         completionData: [],
         aggregatedWellData: [],
-        filter: undefined
+        initialData: [],
+        mapData: [],
+        filter: {well: [], reservoir: [], type: []}
     })
 
     useEffect(() => {
@@ -28,20 +30,26 @@ export const AppProvider = ({children}: TachAppProviderProps) => {
     }, [COMPLETIONFILEURL,PRODUCTIONFILEURL])
 
     useEffect(() => {
-       // generate the aggregatedWellData from the production file and completion file
+       // generate the rawData from the production file and completion file
         const data = state.productionData.map(d => {
             const Date = d.Year + '-' + `${('0' + parseInt(d.Month)).slice(-2)}` + '-' + '01'
             const completionInfo = state.completionData.find(y => y.wellAPI === d.wellAPI)
             if (completionInfo) {
                 return {...d, ...completionInfo, Date}
             } else {
-                console.error("cannot find well" + d.wellAPI + "in the completion file")
+                console.warn("cannot find well" + d.wellAPI + "in the completion file")
                 return {...d, Date, wellName: '', Type: '', X: '0', Y: '0', TD: "", isHorizontal: '0', reservoir: 'missing', faultBlock: '', compartment: '', maxBHP:'0', long: '0', lat: '0'}
             }
         }) 
-        setState(s => ({...s, aggregatedWellData: data}))
-        console.info(state.productionData, state.completionData, data)
+        setState(s => ({...s, aggregatedWellData: data, initialData: data, mapData: state.completionData}))
     }, [state.productionData, state.completionData])
+
+    useEffect(() => {
+        const {well, reservoir, type} = state.filter 
+        const aggregatedWellData = state.initialData.filter(x => (well.length == 0 || well.includes(x.wellName)) && (reservoir.length === 0 || reservoir.includes(x.reservoir)) && (type.length === 0 || type.includes(x.Type)))
+        const mapData = state.completionData.filter(x => (well.length == 0 || well.includes(x.wellName)) && (reservoir.length === 0 || reservoir.includes(x.reservoir)) && (type.length === 0 || type.includes(x.Type)))
+        setState(s => ({...s, aggregatedWellData, mapData}))
+    }, [state.filter])
 
     const loadInitialData = useDynamicCallback(() => {
         readRemoteFile(PRODUCTIONFILEURL, {
@@ -60,19 +68,9 @@ export const AppProvider = ({children}: TachAppProviderProps) => {
        })
     })
 
-    const setFilter = (word: string) => {
-        setState(s => ({...s, filter: word}))
+    const setFilter = (filter: Filter) => {
+        setState(s => ({...s, filter: filter}))
     }
-
-    const getFilteredWells = () => {
-        // if (state.filter && state.filter !== "") {
-        //     return state.aggregatedWellData.filter(x => x.wellName.toLowerCase().includes(state.filter!.toLowerCase()))
-        // } else return state.aggregatedWellData
-        // console.info("state", state)
-        return state.aggregatedWellData
-    }
-
-    const getCompletionData = () => state.completionData
 
     const editWellName = (wellApi: string, newName: string | undefined) => {
         if (newName) {
@@ -88,14 +86,14 @@ export const AppProvider = ({children}: TachAppProviderProps) => {
 
     return (
         <AppContext.Provider value={{
-           selectedWells: [],
-           productionData: [],
-           completionData: [],
-           aggregatedWellData: [],
-           filter: undefined,
+           selectedWells: state.selectedWells,
+           productionData: state.productionData,
+           completionData: state.completionData,
+           mapData: state.mapData,
+           aggregatedWellData: state.aggregatedWellData,
+           initialData: state.initialData,
+           filter: {well: [], reservoir: [], type: []},
            setFilter: setFilter, 
-           getFilteredWells: getFilteredWells,
-           getCompletionData: getCompletionData,
            editWellName: editWellName
         }}>
             {children}

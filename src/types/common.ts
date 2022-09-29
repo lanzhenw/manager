@@ -4,13 +4,16 @@ export type AppInternalState = {
     productionData: ProductionData[]
     completionData: CompletionData[]
     aggregatedWellData: IData[]
-    filter: string | undefined
+    mapData: CompletionData[]
+    initialData: IData[]
+    filter: Filter
 }
 
 export type AppCtx = AppInternalState & {
-    setFilter: (word: string) => void
-    getFilteredWells: () => IData[] 
-    getCompletionData: () => CompletionData[]
+    setFilter: (filter: Filter) => void
+    // getFilteredWells: () => IData[] 
+    // getCompletionData: () => CompletionData[]
+    // getRawData: () => IData[]
     editWellName: (wellApi: string, newName: string | undefined) => void
 }
 
@@ -68,4 +71,10 @@ export interface IData extends ProductionData {
     long: string
     lat: string
     Date: string
+}
+
+export type Filter = {
+    well: string[]
+    reservoir : string[]
+    type: string[]
 }

@@ -16,7 +16,7 @@ type Series ={name: string, data: number[], color: string | Highcharts.GradientC
 const Chart1 = () => {
     const appCtx = useApp()
    
-    const wellData =  appCtx.getFilteredWells()
+    const wellData =  appCtx.aggregatedWellData
     const contentRef = useRef<HTMLDivElement | null>(null)
     const chartRef = useRef<any>(null)
     const size = useSize(contentRef)

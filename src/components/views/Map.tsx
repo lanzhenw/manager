@@ -11,7 +11,7 @@ const TOKEN = 'pk.eyJ1IjoiZGFuaWVsMTAwMiIsImEiOiJja3hlZG94NDIxZG42MnZreXlwa2l4c2
 
 const MapGL = () => {
     const appCtx = useApp()
-    const wellData =  appCtx.getCompletionData()
+    const wellData =  appCtx.mapData
 
     const initialViewState = {
         latitude: -33.17872233,
@@ -41,7 +41,6 @@ const MapGL = () => {
     }
     
     const markers = useMemo(() => {
-    
         return wellData.map((well) => (
             <Marker
                 key={well.wellName}
