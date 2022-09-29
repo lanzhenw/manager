@@ -37,7 +37,6 @@ const Table = () => {
         setPage(event.page);
     }
 
-
     const sortChange = (event: GridSortChangeEvent) => {
       setSort(event.sort);
     };
@@ -50,8 +49,6 @@ const Table = () => {
         const d = getData(wellData, sort)
         setData(d)
     }, [ sort, wellData])
-
-    console.info('data', data, wellData)
    
     return (
         <ViewTabStrip tab={1}>

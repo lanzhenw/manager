@@ -12,14 +12,12 @@ import ScrollContainer from '../ScrollContainer';
 const Chart2 = () => {
 
     const appCtx = useApp()
-   
     const wellData =  appCtx.aggregatedWellData
 
     const data = useMemo(() => {
         const aggregated =  groupByKey(wellData, ['Date'], ["Qo", "Qg", "Qw"]) as {reservoir: string, Date: string, Qo: number, Qg: number, Qw: number}[]
         return aggregated.sort((a, b) => (new Date(a.Date).getTime()) - (new Date(b.Date).getTime()))
     }, [wellData])
-    console.info("data", data)
     
     const options = {
         chart: {

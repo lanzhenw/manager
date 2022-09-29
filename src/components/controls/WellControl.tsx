@@ -9,7 +9,7 @@ const Control = styled.div`
 `
 
 const WellControl:React.FunctionComponent = () => {
-    const appCtx = useApp()
+ 
     return (
         <Control>
             <FilterBar /> 

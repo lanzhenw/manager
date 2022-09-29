@@ -15,7 +15,9 @@ const FilterBar:React.FunctionComponent = () => {
 
     const wellOptions = Array.from(new Set(raw.map(x => x.wellName)))
     const reservoirOptions = Array.from(new Set(raw.map(x => x.reservoir)))
+
     const [selected, setSelect] = useState<Filter>({well: [], reservoir: [], type: []})
+    
     const onHandleSelect = (ev: MultiSelectChangeEvent, category: string) => setSelect(s => ({...s, [category]: ev.value}))
 
     useEffect(() => {
