@@ -8,18 +8,20 @@ export function useDynamicCallback(callBack: any) {
     return useCallback((...args) => ref.current.apply(this, args), [])
 }
 
-export const groupByKey = (arr:IGeneric[], groupByKeys: string[], aggregateByKey: string) => {
+export const groupByKey = (arr:IGeneric[], groupByKeys: string[], aggregateByKeys: string[]) => {
     let grouped: IGeneric = {}
     const subSet = (o:IGeneric, keys:string[]) => Object.fromEntries(keys.map(k => [k, o[k]]))
     arr.forEach(o => {
       const values = groupByKeys.map(k => o[k]).join("|");
-
-      if (grouped[values])
-        grouped[values][aggregateByKey] = parseFloat(o[aggregateByKey]) + parseFloat( grouped[values][aggregateByKey])
-      else
-        grouped[values] = { ...subSet(o, groupByKeys), [aggregateByKey]: o[aggregateByKey] }
+      aggregateByKeys.forEach(aggregateByKey => {
+        if (grouped[values]){
+          const v = parseFloat(grouped[values][aggregateByKey])
+          grouped[values][aggregateByKey] = parseFloat(o[aggregateByKey]) + (v ? v : 0)
+        } else {
+          grouped[values] = { ...subSet(o, groupByKeys), [aggregateByKey]: o[aggregateByKey] }
+        }
+      })
     })
-  
     return Object.values(grouped);
 }
 

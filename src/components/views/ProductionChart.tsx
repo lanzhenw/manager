@@ -15,14 +15,11 @@ type Series ={name: string, data: number[], color: string | Highcharts.GradientC
 
 const Chart1 = () => {
     const appCtx = useApp()
-   
     const wellData =  appCtx.aggregatedWellData
-    const contentRef = useRef<HTMLDivElement | null>(null)
-    const chartRef = useRef<any>(null)
-    const size = useSize(contentRef)
+
 
     const data = useMemo(() => {
-        return groupByKey(wellData, ['reservoir','Date'], "Qo") as {reservoir: string, Date: string, Qo: number}[]
+        return groupByKey(wellData, ['reservoir','Date'],["Qo"]) as {reservoir: string, Date: string, Qo: number}[]
     }, [wellData])
      
     const initialSeries: Series[] = []
@@ -36,7 +33,6 @@ const Chart1 = () => {
                                 const d = new Date(y)
                                 const mm = d.getUTCMonth() + 1 > 9 ? d.getUTCMonth() + 1 : '0' + (d.getUTCMonth() + 1)
                                 const dd = d.getUTCDate() + 1 > 9 ? d.getUTCDate() : '0' + d.getUTCDate()
-
                                 return `${d.getUTCFullYear()}-${mm}-${dd}`
                                 
                             })
@@ -46,7 +42,6 @@ const Chart1 = () => {
                 data: new Array(dateList.length).fill(0),
                 color: idx == 2 ? '#fcff33' : colors[idx+4]
             }))
-            
             data.forEach(d => {
                 const seriesIdx = series.findIndex(x => x.name === d.reservoir)
                 const dataIdx = dateList.findIndex(x => x === d.Date)
@@ -135,6 +130,15 @@ const Chart1 = () => {
 
     
     const Chart = () => {
+        const contentRef = useRef<HTMLDivElement | null>(null)
+        const chartRef = useRef<any>(null)
+        const size = useSize(contentRef)
+
+        useEffect(() => {
+            if(chartRef.current) {
+                chartRef.current.chart.reflow()
+            }
+        }, [size])
         return (<div style={{ width: "100%", height: "100%", marginBottom: "0", backgroundColor: "white" }} 
            ref={contentRef}
            >
